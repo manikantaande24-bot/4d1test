@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <title>Wedding Invitation | Rahul &amp; Priya</title>
+
+    <!-- Elegant fonts for the hero text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@300;400;500&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* ================================
+           RESET AND BASE STYLES
+        ================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background: #fdfbf7;
+            font-family: sans-serif;
+
+            overflow-x: clip;
+        }
+
+        /* ================================
+           SCROLL CONTAINER
+        ================================= */
+
+        .scroll-container {
+            position: relative;
+            width: 100%;
+            height: 200vh;
+            height: 200dvh;
+
+            margin: 0;
+            padding: 0;
+
+            background: #fdfbf7;
+            z-index: 10;
+        }
+
+        /* ================================
+           STICKY HERO SECTION
+        ================================= */
+
+        .hero-wrapper {
+            position: sticky;
+            top: 0;
+
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+
+            max-width: calc(100vh * (9 / 16));
+            max-width: calc(100dvh * (9 / 16));
+
+            margin: 0 auto;
+
+            overflow: hidden;
+
+            background: #fff;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.18);
+
+            isolation: isolate;
+        }
+
+        /* ================================
+           HERO IMAGE LAYERS
+        ================================= */
+
+        .layer {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            will-change: transform;
+            pointer-events: none;
+        }
+
+        .layer img {
+            display: block;
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+            object-position: center;
+
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* Layer stacking order */
+
+        .bg-layer {
+            z-index: 1;
+        }
+
+        /* Back petals – subtle, slower */
+        .petals-layer-back {
+            z-index: 2;
+            opacity: 0.75;
+        }
+
+        /* Front petals – prominent, faster */
+        .petals-layer-front {
+            z-index: 4;
+            opacity: 1;
+        }
+
+        /* Boat layer – above petals, below text */
+        .boat-layer {
+            z-index: 6;
+            transform: translateY(30%);
+        }
+
+        /* The boat is CONTAINED, not cropped */
+        .boat-layer img {
+            object-fit: contain;
+            object-position: bottom center;
+        }
+
+        /* ================================
+           HERO TEXT GROUP
+           Moved down, stacked names, white glow,
+           and a high z-index so it always sits
+           in front of the boat.
+        ================================= */
+
+        .hero-text {
+            position: absolute;
+            top: clamp(80px, 14vh, 160px);
+            left: 16px;
+            right: 16px;
+
+            z-index: 5; /* ALWAYS on top */
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(12px, 2vh, 22px);
+
+            pointer-events: none;
+            user-select: none;
+
+            will-change: transform;
+        }
+
+        /* ---- Couple names (STACKED, LARGE, WHITE GLOW) ---- */
+
+        .hero-names {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            color: #ffffff;
+
+            font-family: "Cormorant Garamond", "Georgia", "Times New Roman", serif;
+            font-weight: 500;
+            font-size: clamp(50px, 9.5vh, 85px);
+            line-height: 1.0;
+            letter-spacing: 0.03em;
+            text-align: center;
+
+            /* White glow + soft dark fall-off for contrast */
+            text-shadow:
+                0 0 4px rgba(255, 255, 255, 0.95),
+                0 0 12px rgba(255, 255, 255, 0.75),
+                0 0 26px rgba(255, 255, 255, 0.55),
+                0 0 48px rgba(255, 255, 255, 0.35),
+                0 2px 6px rgba(18, 12, 8, 0.35),
+                0 4px 20px rgba(18, 12, 8, 0.28);
+        }
+
+        .hero-names .name {
+            display: block;
+        }
+
+        .hero-names .ampersand {
+            display: block;
+            margin: 0.02em 0 0.04em;
+
+            color: #f6e6bb;
+            font-family: "Cormorant Garamond", "Georgia", serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: 0.62em;
+            line-height: 1;
+
+            text-shadow:
+                0 0 4px rgba(255, 255, 255, 0.95),
+                0 0 12px rgba(255, 255, 255, 0.7),
+                0 0 26px rgba(255, 255, 255, 0.5),
+                0 0 44px rgba(255, 255, 255, 0.32),
+                0 2px 6px rgba(18, 12, 8, 0.35),
+                0 4px 18px rgba(18, 12, 8, 0.25);
+        }
+
+        /* ---- Decorative divider + date ---- */
+
+        .hero-subtitle {
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 1.4vw, 14px);
+
+            color: rgba(255, 255, 255, 0.95);
+
+            font-family: "Montserrat", "Helvetica Neue", sans-serif;
+            font-weight: 400;
+            font-size: clamp(8.5px, 1.55vh, 11px);
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            text-align: center;
+
+            text-shadow:
+                0 0 6px rgba(255, 255, 255, 0.7),
+                0 1px 2px rgba(18, 12, 8, 0.4),
+                0 2px 10px rgba(18, 12, 8, 0.25);
+        }
+
+        .hero-subtitle .line {
+            display: block;
+            width: clamp(18px, 4.5vw, 38px);
+            height: 1px;
+
+            background: rgba(255, 255, 255, 0.65);
+        }
+
+        .hero-subtitle .date-text {
+            white-space: nowrap;
+        }
+
+        /* ---- Subtle shade behind the text for readability ---- */
+
+        .hero-top-shade {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 300px;
+            z-index: 6;
+
+            background: linear-gradient(
+                to bottom,
+                rgba(18, 14, 12, 0.38),
+                rgba(18, 14, 12, 0.16) 45%,
+                rgba(18, 14, 12, 0.04) 75%,
+                transparent
+            );
+
+            pointer-events: none;
+        }
+
+        /* ================================
+           SECOND SECTION: WEDDING DETAILS
+        ================================= */
+
+        .wedding-details {
+            position: relative;
+            z-index: 20;
+
+            width: 100%;
+            min-height: 100vh;
+            padding: 80px 20px;
+
+            margin: 0;
+
+            background: #fdfbf7;
+            color: #333;
+            text-align: center;
+            font-family: "Georgia", serif;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wedding-details h2 {
+            margin: 0 0 40px;
+
+            font-family: sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            line-height: 1.6;
+            text-transform: uppercase;
+
+            color: #888;
+        }
+
+        .parents-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .person {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .person h3 {
+            margin: 0 0 15px;
+
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 400;
+            line-height: 1.3;
+        }
+
+        .person p {
+            margin: 0;
+
+            color: #666;
+            font-family: sans-serif;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .ampersand {
+            margin: 10px 0;
+
+            color: #d4af37;
+            font-family: "Georgia", serif;
+            font-size: 3rem;
+            font-style: italic;
+        }
+
+        .wedding-date {
+            width: 60%;
+            max-width: 300px;
+
+            margin-top: 60px;
+            padding-top: 20px;
+
+            border-top: 1px solid #e0e0e0;
+
+            color: #888;
+            font-family: sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            line-height: 1.8;
+        }
+
+        /* ================================
+           TABLET AND DESKTOP
+        ================================= */
+
+        @media (min-width: 768px) {
+            .parents-container {
+                flex-direction: row;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 50px;
+            }
+
+            .ampersand {
+                flex-shrink: 0;
+                margin: 15px 10px 0;
+                font-size: 3.5rem;
+            }
+        }
+
+        /* ================================
+           SMALL MOBILE SCREENS
+        ================================= */
+
+        @media (max-width: 380px) {
+            .hero-text {
+                top: clamp(60px, 11vh, 120px);
+                gap: 10px;
+            }
+
+            .hero-names {
+                font-size: clamp(42px, 8vh, 64px);
+                letter-spacing: 0.02em;
+            }
+
+            .hero-subtitle {
+                font-size: 7.5px;
+                letter-spacing: 0.26em;
+            }
+
+            .hero-subtitle .line {
+                width: 16px;
+            }
+
+            .wedding-details {
+                padding: 60px 18px;
+            }
+
+            .wedding-details h2 {
+                font-size: 0.85rem;
+                letter-spacing: 2px;
+            }
+
+            .person h3 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* ================================
+           REDUCED MOTION
+        ================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+            .layer,
+            .hero-text {
+                will-change: auto;
+            }
+
+            .scroll-container {
+                height: 100vh;
+                height: 100dvh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =================================
+         HERO SCROLL CONTAINER
+    ================================== -->
+
+    <section class="scroll-container" id="hero-scroll">
+
+        <!-- Sticky hero (everything stays clipped inside) -->
+        <div class="hero-wrapper" id="hero">
+
+            <!-- Layer 1: Pond Background -->
+            <div class="layer bg-layer" id="layer-bg">
+                <img
+                    src="assets/pondbg.png"
+                    alt="Romantic pond background"
+                    fetchpriority="high"
+                >
+            </div>
+
+            <!-- Layer 2: Floating Petals (Back) -->
+            <div class="layer petals-layer-back" id="layer-petals-back">
+                <img
+                    src="assets/petalsimg.png"
+                    alt=""
+                >
+            </div>
+
+            <!-- Layer 3: Floating Petals (Front) -->
+            <div class="layer petals-layer-front" id="layer-petals-front">
+                <img
+                    src="assets/petalsimg.png"
+                    alt="Floating flower petals"
+                >
+            </div>
+
+            <!-- Layer 4: Boat with Couple -->
+            <div class="layer boat-layer" id="layer-boat">
+                <img
+                    src="assets/boatcouple.png"
+                    alt="Bride and groom sitting in a boat"
+                >
+            </div>
+
+            <!-- Top gradient to improve text readability -->
+            <div class="hero-top-shade" aria-hidden="true"></div>
+
+            <!-- Hero text: names + date (always on top) -->
+            <div class="hero-text" id="hero-text">
+                <h1 class="hero-names" aria-label="Rahul and Priya">
+                    <span class="name">Rahul</span>
+                    <span class="ampersand">&amp;</span>
+                    <span class="name">Priya</span>
+                </h1>
+
+                <div class="hero-subtitle">
+                    <span class="line" aria-hidden="true"></span>
+                    <span class="date-text">Save the Date · 14 February 2026</span>
+                    <span class="line" aria-hidden="true"></span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- =================================
+         SECOND SECTION: PARENTS AND DETAILS
+    ================================== -->
+
+    <section class="wedding-details" id="wedding-details">
+
+        <h2>Together with their parents</h2>
+
+        <div class="parents-container">
+
+            <!-- Groom Details -->
+            <div class="person">
+                <h3>Rahul</h3>
+                <p>
+                    Son of<br>
+                    Mr. &amp; Mrs. Sharma
+                </p>
+            </div>
+
+            <!-- Separator -->
+            <div class="ampersand">&amp;</div>
+
+            <!-- Bride Details -->
+            <div class="person">
+                <h3>Priya</h3>
+                <p>
+                    Daughter of<br>
+                    Mr. &amp; Mrs. Patel
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Wedding Date -->
+        <div class="wedding-date">
+            SAVE THE DATE • 14 FEBRUARY 2026
+        </div>
+
+    </section>
+
+    <script>
+        /* =================================
+           ELEMENT REFERENCES
+        ================================== */
+
+        const heroScroll      = document.getElementById("hero-scroll");
+        const heroWrapper     = document.getElementById("hero");
+        const heroText        = document.getElementById("hero-text");
+
+        const bgLayer         = document.getElementById("layer-bg");
+        const petalsLayerBack = document.getElementById("layer-petals-back");
+        const petalsLayerFront= document.getElementById("layer-petals-front");
+        const boatLayer       = document.getElementById("layer-boat");
+
+        const prefersReducedMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
+
+        /* =================================
+           SPRING PHYSICS
+        ================================= */
+
+        function springStep(state, target, dt, omega, zeta) {
+            const f    = 1 + 2 * dt * zeta * omega;
+            const oo   = omega * omega;
+            const hoo  = dt * oo;
+            const hhoo = dt * hoo;
+            const inv  = 1 / (f + hhoo);
+
+            const newValue =
+                (f * state.value + dt * state.velocity + hhoo * target) * inv;
+
+            const newVelocity =
+                (state.velocity + hoo * (target - state.value)) * inv;
+
+            state.value    = newValue;
+            state.velocity = newVelocity;
+        }
+
+        /* =================================
+           SPRING STATE
+        ================================= */
+
+        const progressSpring = {
+            value: 0,
+            velocity: 0,
+            omega: 8.5,
+            zeta: 0.82
+        };
+
+        const mouseXSpring = { value: 0, velocity: 0, omega: 10, zeta: 1.0 };
+        const mouseYSpring = { value: 0, velocity: 0, omega: 10, zeta: 1.0 };
+
+        const gyroXSpring  = { value: 0, velocity: 0, omega: 9,  zeta: 1.0 };
+        const gyroYSpring  = { value: 0, velocity: 0, omega: 9,  zeta: 1.0 };
+
+        let targetProgress = 0;
+        let targetMouseX   = 0;
+        let targetMouseY   = 0;
+        let targetGyroX    = 0;
+        let targetGyroY    = 0;
+
+        /* =================================
+           SCROLL PROGRESS
+        ================================= */
+
+        function updateTargetProgress() {
+            const scrollDistance =
+                heroScroll.offsetHeight - heroWrapper.offsetHeight;
+
+            if (scrollDistance <= 0) {
+                targetProgress = 1;
+                return;
+            }
+
+            const distanceScrolled =
+                -heroScroll.getBoundingClientRect().top;
+
+            targetProgress = Math.max(
+                0,
+                Math.min(distanceScrolled / scrollDistance, 1)
+            );
+        }
+
+        window.addEventListener("scroll", updateTargetProgress, { passive: true });
+        window.addEventListener("resize", updateTargetProgress, { passive: true });
+        window.addEventListener("orientationchange", updateTargetProgress);
+
+        updateTargetProgress();
+
+        /* =================================
+           MOUSE PARALLAX
+        ================================= */
+
+        if (!prefersReducedMotion) {
+            window.addEventListener(
+                "mousemove",
+                (event) => {
+                    const x = (event.clientX / window.innerWidth) * 2 - 1;
+                    const y = (event.clientY / window.innerHeight) * 2 - 1;
+
+                    targetMouseX = x * 18;
+                    targetMouseY = y * 18;
+                },
+                { passive: true }
+            );
+        }
+
+        /* =================================
+           GYROSCOPE PARALLAX
+        ================================= */
+
+        if (!prefersReducedMotion) {
+            const handleOrientation = (event) => {
+                const beta  = event.beta  ?? 0;
+                const gamma = event.gamma ?? 0;
+
+                const nx = Math.max(-1, Math.min(1, gamma / 35));
+                const ny = Math.max(-1, Math.min(1, (beta - 45) / 35));
+
+                targetGyroX = nx * 14;
+                targetGyroY = ny * 14;
+            };
+
+            if (typeof DeviceOrientationEvent !== "undefined") {
+                if (typeof DeviceOrientationEvent.requestPermission === "function") {
+                    const enableGyro = () => {
+                        DeviceOrientationEvent.requestPermission()
+                            .then((state) => {
+                                if (state === "granted") {
+                                    window.addEventListener(
+                                        "deviceorientation",
+                                        handleOrientation,
+                                        { passive: true }
+                                    );
+                                }
+                            })
+                            .catch(() => {});
+
+                        window.removeEventListener("touchend", enableGyro);
+                        window.removeEventListener("click", enableGyro);
+                    };
+
+                    window.addEventListener("touchend", enableGyro, { once: true });
+                    window.addEventListener("click", enableGyro, { once: true });
+                } else {
+                    window.addEventListener(
+                        "deviceorientation",
+                        handleOrientation,
+                        { passive: true }
+                    );
+                }
+            }
+        }
+
+        /* =================================
+           REDUCED MOTION: STATIC LAYOUT
+        ================================= */
+
+        if (prefersReducedMotion) {
+            bgLayer.style.transform           = "scale(1.12)";
+            petalsLayerBack.style.transform   = "scale(1.1)";
+            petalsLayerFront.style.transform  = "scale(1.15)";
+            boatLayer.style.transform         = "translate3d(0, 0, 0)";
+            heroText.style.transform          = "translate3d(0, 0, 0)";
+        }
+
+        /* =================================
+           ANIMATION LOOP
+        ================================= */
+
+        let lastTime = 0;
+
+        function animate(now) {
+            if (prefersReducedMotion) return;
+
+            if (!lastTime) lastTime = now;
+
+            let dt = (now - lastTime) / 1000;
+            lastTime = now;
+
+            if (dt > 1 / 30) dt = 1 / 30;
+            if (dt <= 0)     dt = 1 / 60;
+
+            /* ---- Advance springs ---- */
+
+            springStep(
+                progressSpring,
+                targetProgress,
+                dt,
+                progressSpring.omega,
+                progressSpring.zeta
+            );
+
+            springStep(mouseXSpring, targetMouseX, dt, mouseXSpring.omega, mouseXSpring.zeta);
+            springStep(mouseYSpring, targetMouseY, dt, mouseYSpring.omega, mouseYSpring.zeta);
+
+            springStep(gyroXSpring,  targetGyroX,  dt, gyroXSpring.omega, gyroXSpring.zeta);
+            springStep(gyroYSpring,  targetGyroY,  dt, gyroYSpring.omega, gyroYSpring.zeta);
+
+            /* ---- Smoothed values ---- */
+
+            const p  = progressSpring.value;
+            const mx = mouseXSpring.value + gyroXSpring.value;
+            const my = mouseYSpring.value + gyroYSpring.value;
+
+            /* ---- Layer scroll offsets (in vh) ---- */
+
+            const bgScrollOffset          = p * -2;          /*   0 → -2vh  */
+            const petalsBackScrollOffset  = p * -8;          /*   0 → -8vh  */
+            const petalsFrontScrollOffset = p * -18;         /*   0 → -18vh */
+            
+            /* FIX: Added +5 to ensure the boat never reaches the absolute bottom edge.
+               At p=1, it rests 5vh down, keeping the bottom edge fully covered. */
+            const boatScrollOffset        = (1 - p) * 30 + 5; 
+            
+            const textScrollOffset        = p * 14;          /*   0 → +14vh */
+
+            /* ---- Background ---- */
+            bgLayer.style.transform = `
+                translate3d(
+                    ${mx * 0.15}px,
+                    calc(${my * 0.15}px + ${bgScrollOffset}vh),
+                    0
+                ) scale(1.12)
+            `;
+
+            /* ---- Petals Back ---- */
+            petalsLayerBack.style.transform = `
+                translate3d(
+                    ${mx * 0.3}px,
+                    calc(${my * 0.3}px + ${petalsBackScrollOffset}vh),
+                    0
+                ) scale(1.1)
+            `;
+
+            /* ---- Petals Front ---- */
+            petalsLayerFront.style.transform = `
+                translate3d(
+                    ${mx * 0.7}px,
+                    calc(${my * 0.7}px + ${petalsFrontScrollOffset}vh),
+                    0
+                ) scale(1.15)
+            `;
+
+            /* ---- Boat ---- */
+            boatLayer.style.transform = `
+                translate3d(
+                    ${mx * 0.85}px,
+                    calc(${my * 0.3}px + ${boatScrollOffset}vh),
+                    0
+                )
+            `;
+
+            /* ---- Text ---- */
+            heroText.style.transform = `
+                translate3d(
+                    ${mx * 0.35}px,
+                    calc(${my * 0.35}px + ${textScrollOffset}vh),
+                    0
+                )
+            `;
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+    </script>
+
+</body>
+</html>
